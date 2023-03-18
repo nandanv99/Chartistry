@@ -165,10 +165,20 @@ p{text-align:center;}
 
 
     <script>
+      {% comment %} {% for key, value in params.items %}
+         var {{ key }} = [{{ value|join:', ' }}];
+        console.log("{{key}} :",{{key}}); 
+        
+      {% endfor %} {% endcomment %}
       {% for key, value in params.items %}
-        var {{ key }} = "{{ value }}".replace(/&#x27;/g, "");;
-        console.log("keys are :",{{key}});
-      {% endfor %}
+    {% if value|is_list %}
+        var {{ key }} = [ {% for item in value %}"{{ item }}"{% if not forloop.last %}, {% endif %}{% endfor %} ];
+    {% else %}
+        var {{ key }} = "{{ value }}";
+    {% endif %}
+    console.log("{{key}} :",{{key}}); 
+{% endfor %}
+
 
     </script>
 
@@ -328,15 +338,12 @@ p{text-align:center;}
         } else {
           // Chart doesn't exist, create a new one with a single dataset
           var $el = $('<canvas class="drop-item"></canvas>').attr('data-attribute', attribute_name);
-          console.log("atribute name : ",window[attribute_name],attribute_name)
+          console.log(window[attribute_name])
           $el.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="fa-solid fa-trash text-white "></span></button>').click(function () { $(this).parent().detach(); }));
           $('#dropzone').append($el);
 
           // Generate random data for the chart
-          var data = [];
-          for (var i = 0; i < 7; i++) {
-            data.push(Math.floor(Math.random() * 100));
-          }
+
 
           // Create the chart with a single dataset
           var ctx = $el[0].getContext('2d');
@@ -358,8 +365,8 @@ p{text-align:center;}
                   id: attribute_name,
                   position: 'right',
                   ticks: {
-                    beginAtZero: true
-                  }
+                    beginAtZero: false
+                  },
                 }]
               }
             }

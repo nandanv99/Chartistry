@@ -4,6 +4,15 @@ import pandas as pd
 from io import StringIO
 import re
 # Create your views here.
+from django.template.defaultfilters import register
+
+@register.filter(name='is_list')
+def is_list(value):
+    return isinstance(value, list)
+
+@register.filter(name='isdigit')
+def is_list(value):
+    return isinstance(value, float)
 
 def main(request):
     return render(request,"upload.html")
@@ -42,7 +51,7 @@ def upload_csv(request):
             item = item.replace('&', 'and')
             new_col.append(item)
 
-
+        print("new cols is :",new_col)
         params={}
         for col in data.columns:
             col_dict = data[col].tolist()
