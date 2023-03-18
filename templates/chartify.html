@@ -403,15 +403,15 @@ p{text-align:center;}
 
     // Create the pie chart
     var ctx = $el[0].getContext('2d');
-    {% comment %} var count = countUnique(window[attribute_name]) {% endcomment %}
-    {% comment %} console.log("count of unique is :",count) {% endcomment %}
+    var count = countUnique(window[attribute_name])
+    console.log("count of unique is :",count)
     var chart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: ['Label 1', 'Label 2', 'Label 3', 'Label 4'],
+        labels: Object.keys(count),
         datasets: [{
           label: attribute_name,
-          data: data,
+          data: Object.values(count),
           backgroundColor: [
             '#ff6384',
             '#36a2eb',
@@ -439,22 +439,15 @@ p{text-align:center;}
     $el.data('chart', chart);
   }
 });
-function countArray(arr) {
-  var count = {};
+function countUnique(arr) {
+  var obj = {};
   for (var i = 0; i < arr.length; i++) {
     var key = arr[i];
-    if (!count[key]) {
-      count[key] = 1;
-    } else {
-      count[key]++;
-    }
+    obj[key] = obj[key] ? obj[key] + 1 : 1;
   }
-  var result = [];
-  for (var prop in count) {
-    result.push({name: prop, count: count[prop]});
-  }
-  return result;
+  return obj;
 }
+
 
 
 
