@@ -31,14 +31,18 @@ def upload_csv(request):
         cols_to_drop = date_cols + phone_cols
         data = data.drop(cols_to_drop, axis=1)
 
-        # recursive_cols = []
-        # for col in data.columns:
-        #     if data[col].dtype == 'object' and data[col].duplicated().any():
-        #         recursive_cols.append(col)
+        cols = []
+        for col in data.columns:
+            if all(data[col].apply(lambda x: isinstance(x, (int, float)))):
+                cols.append(col)
+        print("cols are : ",cols)
 
-        
+        # handling unnamed columns 
+        count=0
+        for i, col in enumerate(data.columns):
+            if col.startswith("Unnamed"):
+                data = data.rename(columns={col: f"Unnamed{count+i+1}"})
 
-        cols=data.columns[data.dtypes != 'object'].tolist()
         recursive_cols=data.columns[data.dtypes == 'object'].tolist()
         print("recursive cols: ",recursive_cols)
         new_col = []
@@ -69,6 +73,7 @@ def upload_csv(request):
 
         context = {'params': params}
         return render(request,"chartify.html",context)
+        # return render(request,"new_template.html",context)
         # return render(request,"main.html",param)
     else:
         redirect('/')
