@@ -72,8 +72,8 @@ def upload_csv(request):
         print(params["head"])
 
         context = {'params': params}
-        return render(request,"chartify.html",context)
-        # return render(request,"new_template.html",context)
+        # return render(request,"chartify.html",context)
+        return render(request,"index.html",context)
         # return render(request,"main.html",param)
     else:
         redirect('/')

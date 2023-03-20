@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/new_main.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous"/>
+    <link rel="icon" type="image/png" href="https://h5p.org/sites/default/files/styles/medium-logo/public/logos/chart-icon-color.png?itok=kpLTYHHJ" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  </head>
+  
+  <body>
+    <div class="site-wrap">
+      <nav class="site-nav">
+        <div class="name">
+          Chartify
+
+          <svg width="24" height="24" viewBox="0 0 24 24">
+            <path
+              d="M11.5,22C11.64,22 11.77,22 11.9,21.96C12.55,21.82 13.09,21.38 13.34,20.78C13.44,20.54 13.5,20.27 13.5,20H9.5A2,2 0 0,0 11.5,22M18,10.5C18,7.43 15.86,4.86 13,4.18V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V4.18C7.13,4.86 5,7.43 5,10.5V16L3,18V19H20V18L18,16M19.97,10H21.97C21.82,6.79 20.24,3.97 17.85,2.15L16.42,3.58C18.46,5 19.82,7.35 19.97,10M6.58,3.58L5.15,2.15C2.76,3.97 1.18,6.79 1,10H3C3.18,7.35 4.54,5 6.58,3.58Z"
+            ></path>
+          </svg>
+        </div>
+
+        <ul>
+          <!-- <li class="active"> 
+            <a class="deal-link" href="#">Deals</a>
+            <ul>
+              <li><a href="#0">Create New Deal</a></li>
+              <li><a href="#0">Modify Deal</a></li>
+              <li><a href="#0">Pipeline</a></li>
+            </ul>
+          </li> -->
+          {% for item in params.head %}
+          <li class="attribute"><a class="add-chart" href="#{{item}}" style="text-decoration:none;">{{item}}</a></li>
+          {% endfor %}
+          {% for item in params.recursive %}
+          <li class="attribute"><a class="add-pie-chart" style="text-decoration:none;">{{item}}</a></li>
+          {% endfor %}
+        </ul>
+
+
+        <!-- <div class="note">
+          <h3>Your Monthly Report</h3>
+          <p>
+            Get the info about all your deals, pros, cons. And build your
+            roadmap.
+          </p>
+        </div> -->
+      </nav>
+
+      <main>
+        <header>
+          <div class="breadcrumbs">
+            <!-- <a href="#0/">Home</a> -->
+            <h4>Visual will be here</h4>
+            
+          </div>
+
+          <nav class="nav-tabs" id="nav-tabs">
+            <a onclick="bar('line')" class="active">
+              Line 
+              <span><i class=" fas fa-solid fa-chart-line"></i></span>
+            </a>
+            <a onclick="bar('bar')">
+              Bar
+              <span><i class="fas fa-duotone fa-chart-simple"></i></span>
+            </a>
+            <a onclick="bar('pie')">
+                Pie
+                <span><i class=" fas fa-duotone fa-chart-pie"></i></span>
+            </a>
+            <a onclick="bar('polarArea')">
+                Polar Area
+                <span><i class=" fas fa-duotone fa-chart-pie"></i></span>
+            </a>
+            <a onclick="bar('scatter')">
+                Scatter
+                <span><i class="fa-solid fa-arrows-to-dot"></i></span>
+            </a>
+            <a onclick="bar('radar')">
+                Radar
+                <span><i class="fa-solid fa-satellite-dish"></i></span>
+            </a>
+            <!-- <a href="#0"> Search Library polarArea</a> -->
+            
+          </nav>
+        </header>
+
+        <div class=" " style="height:90vh;">
+            <div id="dropzone" class="">
+            </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+        const links = document.querySelectorAll('.deal-link');
+        const list = document.querySelector('ul');
+      
+        links.forEach(function(link) {
+          link.addEventListener('click', function(event) {
+            event.preventDefault();
+            list.classList.toggle('show');
+          });
+        });
+      </script>
+
+    <script>
+      const navTabs = document.querySelectorAll("#nav-tabs > a");
+      navTabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          navTabs.forEach((tab) => {
+            tab.classList.remove("active");
+          });
+          tab.classList.add("active");
+        });
+      });
+    </script>
+    <script>
+        // Get all elements with class "attribute"
+        const attributes = document.querySelectorAll('.attribute');
+
+        // Loop through each attribute element
+        attributes.forEach(attribute => {
+        // Add click event listener to each attribute element
+        attribute.addEventListener('click', () => {
+            // Remove "active" class from all attribute elements
+            attributes.forEach(attr => {
+            attr.classList.remove('active');
+            });
+
+            // Add "active" class to clicked attribute element
+            attribute.classList.add('active');
+        });
+        });
+
+    </script>
+    <script>
+        {% for key, value in params.items %}
+          {% if value|is_list %}
+              var {{ key }} = [ {% for item in value %}"{{ item }}"{% if not forloop.last %}, {% endif %}{% endfor %} ];
+          {% else %}
+              var {{ key }} = "{{ value }}";
+          {% endif %}
+          console.log("{{key}} :",{{key}}); 
+        {% endfor %}
+    </script>
+    <script>
+        $('.add-chart').click('click', function() {
+          // Remove any previously added charts
+          $('.drop-item').remove();
+  
+          var attribute_name = $(this).text().trim(); // Replace with desired attribute name
+          var $el = $('<canvas id="myChart" class="drop-item text-center "></canvas><hr class=" drop-item p-1 m-1"/><div class="dropdown drop-item"><button class="btn bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">X-axis</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">{% for item in params.head %}<a class="dropdown-item" onclick="setXAxisLabels({{item}}); return false;" >{{item}}</a>{% endfor %}</div></div>').attr('data-attribute', attribute_name);
+          console.log(window[attribute_name]);
+          $('#dropzone').append($el);
+          var ctx = $el[0].getContext('2d');
+          var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July','Aug','Sep','Oct','Nov','Dec'],
+              datasets: [{
+                label: attribute_name,
+                data: window[attribute_name],
+                borderWidth: 1,
+                borderColor: '#d92136',
+                yAxisID: attribute_name // Use attribute name as ID for y-axis scale
+              }]
+            },
+            options: {
+              scales: {
+                yAxes: [{
+                  id: attribute_name,
+                  position: 'right',
+                  ticks: {
+                    beginAtZero: false
+                  },
+                }],
+                x:{
+                    grid:{
+                        drawOnChartArea: false
+                      },
+                },
+              }
+            }
+          });
+          $el.data('chart', chart);
+        });
+      </script>
+      <script>
+        $('.add-pie-chart').click('click', function() {
+            var attribute_name = $(this).text().trim(); // Replace with desired attribute name
+            var $existingChart = $('.drop-item canvas[data-attribute="' + attribute_name + '"]');
+            $('.drop-item').remove();
+            if ($existingChart.length) {
+              var chart = $existingChart.data('chart');
+              var newData = [];
+              for (var i = 0; i < 4; i++) {
+                newData.push(Math.floor(Math.random() * 100));
+              }
+              chart.data.datasets[0].data = newData;
+              chart.update();
+            } else {
+              var $el = $('<canvas class="drop-item" style="max-height:85vh;"></canvas>').attr('data-attribute', attribute_name);
+              $el.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="fa-solid fa-trash text-white"></span></button>').click(function () { $(this).parent().detach(); }));
+              $('#dropzone').append($el);
+      
+              // Generate random data for the chart
+              var data = [];
+              for (var i = 0; i < 4; i++) {
+                data.push(Math.floor(Math.random() * 100));
+              }
+              console.log("data is pie :",data)
+      
+              // Create the pie chart
+              var ctx = $el[0].getContext('2d');
+              var count = countUnique(window[attribute_name])
+              console.log("count of unique is :",count)
+              var chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                  labels: Object.keys(count),
+                  datasets: [{
+                    label: attribute_name,
+                    data: Object.values(count),
+                    backgroundColor: [
+                      '#ff6384',
+                      '#36a2eb',
+                      '#ffce56',
+                      '#d92136'
+                    ]
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  legend: {
+                    position: 'bottom'
+                  },
+                  title: {
+                    display: true,
+                    text: attribute_name
+                  },
+                  animation: {
+                    animateScale: true,
+                    animateRotate: true
+                  }
+                }
+              });
+              $el.data('chart', chart);
+            }
+          });
+          function countUnique(arr) {
+            var obj = {};
+            for (var i = 0; i < arr.length; i++) {
+              var key = arr[i];
+              obj[key] = obj[key] ? obj[key] + 1 : 1;
+            }
+            return obj;
+          }
+      </script>
+
+    <script src="{% static 'js/change_chart.js' %}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  </body>
+</html>

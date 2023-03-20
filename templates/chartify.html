@@ -94,17 +94,14 @@ display: block;
                       <a class="dropdown-item" href="#">Choose another visual &raquo;</a>
                       <ul class="dropdown-menu dropdown-submenu">
                         <li>
-                          <a class="dropdown-item" href="#">Bar plot</a>
+                          <a class="dropdown-item add-bar-chart" onclick="bar('bar')" id="changeChartBtn" href="#">Bar plot</a>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="#">Scatter plot</a>
+                          <a class="dropdown-item" onclick="bar('polarArea')" href="#">PolarArea</a>
                         </li>
                       </ul>
                       </li>
                     </div> 
-
-
-
                   </div>
                 </div>
                 {% endfor %}
@@ -150,307 +147,137 @@ display: block;
       </div>
     </div>
 
+
+
+
     <script>
-      $(document).ready(function() {
-        // initial state is content
-        var isTableVisible = false;
-        
-        $("#add-table").click(function(event) {
-          event.preventDefault();
-          
-          // check if table is visible
-          if (isTableVisible) {
-            // if it is, remove the table and show the original content
-            $("#dropzone table").remove();
-            $("#dropzone").text("Some content here");
-            isTableVisible = false;
-          } else {
-            // if it isn't, create the table and hide the original content
-            var table = $("<table>").addClass("table table-striped table-bordered table-hover");
-            var headers = $("<thead><tr><th class='text-white'>ID</th><th class='text-white'>Name</th><th class='text-white'>Email</th></tr></thead>");
-            var rows = $("<tbody><tr><td class='text-white'>1</td><td class='text-white'>John Doe</td><td class='text-white'>johndoe@example.com</td></tr><tr><td>2</td><td>Jane Doe</td><td>janedoe@example.com</td></tr></tbody>");
-            table.append(headers).append(rows);
-      
-            $("#dropzone").html(table);
-            isTableVisible = true;
-          }
-        });
-      });
-      
-      
+      {% for key, value in params.items %}
+        {% if value|is_list %}
+            var {{ key }} = [ {% for item in value %}"{{ item }}"{% if not forloop.last %}, {% endif %}{% endfor %} ];
+        {% else %}
+            var {{ key }} = "{{ value }}";
+        {% endif %}
+        console.log("{{key}} :",{{key}}); 
+      {% endfor %}
     </script>
     
-
-    <script>
-      function showAlert() {
-        var alertElement = document.getElementById("myAlert");
-        alertElement.style.display = "block";
-        setTimeout(function() {
-          alertElement.style.display = "none";
-        }, 5000);
-      }
-    </script>
-
-
-
-    <script>
-      {% comment %} {% for key, value in params.items %}
-         var {{ key }} = [{{ value|join:', ' }}];
-        console.log("{{key}} :",{{key}}); 
-        
-      {% endfor %} {% endcomment %}
-      {% for key, value in params.items %}
-    {% if value|is_list %}
-        var {{ key }} = [ {% for item in value %}"{{ item }}"{% if not forloop.last %}, {% endif %}{% endfor %} ];
-    {% else %}
-        var {{ key }} = "{{ value }}";
-    {% endif %}
-    console.log("{{key}} :",{{key}}); 
-{% endfor %}
-
-
-    </script>
-
-    <script>
-      $(document).ready(function() {
-        console.log("Cool")
-        setXAxisLabels(['Nands', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']);
-      });
-
-      function setXAxisLabels(labels) {
-        console.log("Cool1")
-        $('.drop-item ').each(function() {
-          console.log("Cool2")
-          var chart = $(this).data('chart');
-          if (chart) {
-            chart.data.labels = labels;
-            chart.update();
-          }
-        });
-      }
-
-    </script>
-
-    {% comment %} <script>
-      $('.drag').draggable({
-        appendTo: 'body',
-        helper: 'clone'
-      });
-
-      $('#dropzone').droppable({
-        activeClass: 'active',
-        hoverClass: 'hover',
-        accept: ":not(.ui-sortable-helper)", 
-        drop: function (e, ui) {
-          var attribute_name = ui.draggable.text();
-          var $existingChart = $('.drop-item canvas[data-attribute="' + attribute_name + '"]');
-          if ($existingChart.length) {
-            // Chart already exists, remove the canvas and create a new chart
-            var chart = $existingChart.data('chart');
-            chart.destroy();
-            $existingChart.parent().remove();
-          }
-        
-          // Create the chart with a single dataset
-          var $el = $('<div class="drop-item"></div>');
-          $el.append($('<canvas></canvas>').attr('data-attribute', attribute_name));
-          $el.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="fa-solid fa-trash text-white"></span></button>').click(function () { 
-            var $parent = $(this).parent();
-            var chart = $parent.find('canvas').data('chart');
-            chart.destroy();
-            $parent.remove(); 
-          }));
-          $(this).append($el);
-
-          // Generate random data for the chart
-          var data = [];
-          for (var i = 0; i < 7; i++) {
-            data.push(Math.floor(Math.random() * 100));
-          }
-
-          // Create the chart with a single dataset
-          var ctx = $el.find('canvas')[0].getContext('2d');
-          var chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-              labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-              datasets: [{
-                label: attribute_name,
-                data: window[attribute_name],
-                borderWidth: 1,
-                borderColor: '#d92136',
-                yAxisID: attribute_name // Use attribute name as ID for y-axis scale
-              }]
-            },
-            options: {
-              scales: {
-                yAxes: [{
-                  id: attribute_name,
-                  position: 'right',
-                  ticks: {
-                    beginAtZero: true
-                  }
-                }]
-              }
-            }
-          });
-          $el.find('canvas').data('chart', chart);
-          // Show success message
-          var $successToast = $('<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">\
-            <div class="toast-header">\
-              <strong class="mr-auto">Success</strong>\
-              <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">\
-                <span aria-hidden="true">&times;</span>\
-              </button>\
-            </div>\
-            <div class="toast-body">Chart added successfully!</div>\
-          </div>');
-
-          $('body').append($successToast);
-          $successToast.toast({
-            autohide: true,
-            delay: 2000,
-            animation: true,
-            position: 'top-right'
-          });
-
-          $successToast.toast('show');
-        }
-        }).sortable({
-          items: '.drop-item',
-          sort: function () {
-            $(this).removeClass("active");
-          }
-        });
-
-    </script> {% endcomment %}
     
     <script>
       $('.add-chart').click('click', function() {
-  // Remove any previously added charts
-  $('.drop-item').remove();
+        // Remove any previously added charts
+        $('.drop-item').remove();
 
-  var attribute_name = $(this).text().trim(); // Replace with desired attribute name
-  var $el = $('<canvas class="drop-item text-center "></canvas>').attr('data-attribute', attribute_name);
-  console.log(window[attribute_name]);
-  $el.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="fa-solid fa-trash text-white "></span></button>').click(function() {
-    $(this).parent().detach();
-  }));
-  $('#dropzone').append($el);
-
-  // Generate random data for the chart
-
-
-  // Create the chart with a single dataset
-  var ctx = $el[0].getContext('2d');
-  var chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [{
-        label: attribute_name,
-        data: window[attribute_name],
-        borderWidth: 1,
-        borderColor: '#d92136',
-        yAxisID: attribute_name // Use attribute name as ID for y-axis scale
-      }]
-    },
-    options: {
-      scales: {
-        yAxes: [{
-          id: attribute_name,
-          position: 'right',
-          ticks: {
-            beginAtZero: false
+        var attribute_name = $(this).text().trim(); // Replace with desired attribute name
+        var $el = $('<canvas id="myChart" class="drop-item text-center "></canvas>').attr('data-attribute', attribute_name);
+        console.log(window[attribute_name]);
+        $el.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="fa-solid fa-trash text-white "></span></button>').click(function() {
+          $(this).parent().detach();
+        }));
+        $('#dropzone').append($el);
+        var ctx = $el[0].getContext('2d');
+        var chart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [{
+              label: attribute_name,
+              data: window[attribute_name],
+              borderWidth: 1,
+              borderColor: '#d92136',
+              yAxisID: attribute_name // Use attribute name as ID for y-axis scale
+            }]
           },
-        }]
-      }
-    }
-  });
-  $el.data('chart', chart);
-});
+          options: {
+            scales: {
+              yAxes: [{
+                id: attribute_name,
+                position: 'right',
+                ticks: {
+                  beginAtZero: false
+                },
+              }]
+            }
+          }
+        });
+        $el.data('chart', chart);
+      });
+      
 
     </script>
     <script>
     $('.add-pie-chart').click('click', function() {
-  var attribute_name = $(this).text().trim(); // Replace with desired attribute name
-  var $existingChart = $('.drop-item canvas[data-attribute="' + attribute_name + '"]');
-  $('.drop-item').remove();
-  if ($existingChart.length) {
-    // Chart already exists, update its data
-    var chart = $existingChart.data('chart');
-    var newData = [];
-    for (var i = 0; i < 4; i++) {
-      newData.push(Math.floor(Math.random() * 100));
-    }
-    chart.data.datasets[0].data = newData;
-    chart.update();
-  } else {
-    // Chart doesn't exist, create a new one
-    var $el = $('<canvas class="drop-item" style="max-height:85vh;"></canvas>').attr('data-attribute', attribute_name);
-    $el.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="fa-solid fa-trash text-white"></span></button>').click(function () { $(this).parent().detach(); }));
-    $('#dropzone').append($el);
-
-    // Generate random data for the chart
-    var data = [];
-    for (var i = 0; i < 4; i++) {
-      data.push(Math.floor(Math.random() * 100));
-    }
-    console.log("data is pie :",data)
-
-    // Create the pie chart
-    var ctx = $el[0].getContext('2d');
-    var count = countUnique(window[attribute_name])
-    console.log("count of unique is :",count)
-    var chart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-        labels: Object.keys(count),
-        datasets: [{
-          label: attribute_name,
-          data: Object.values(count),
-          backgroundColor: [
-            '#ff6384',
-            '#36a2eb',
-            '#ffce56',
-            '#d92136'
-          ]
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: {
-          position: 'bottom'
-        },
-        title: {
-          display: true,
-          text: attribute_name
-        },
-        animation: {
-          animateScale: true,
-          animateRotate: true
+      var attribute_name = $(this).text().trim(); // Replace with desired attribute name
+      var $existingChart = $('.drop-item canvas[data-attribute="' + attribute_name + '"]');
+      $('.drop-item').remove();
+      if ($existingChart.length) {
+        var chart = $existingChart.data('chart');
+        var newData = [];
+        for (var i = 0; i < 4; i++) {
+          newData.push(Math.floor(Math.random() * 100));
         }
+        chart.data.datasets[0].data = newData;
+        chart.update();
+      } else {
+        var $el = $('<canvas class="drop-item" style="max-height:85vh;"></canvas>').attr('data-attribute', attribute_name);
+        $el.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="fa-solid fa-trash text-white"></span></button>').click(function () { $(this).parent().detach(); }));
+        $('#dropzone').append($el);
+
+        // Generate random data for the chart
+        var data = [];
+        for (var i = 0; i < 4; i++) {
+          data.push(Math.floor(Math.random() * 100));
+        }
+        console.log("data is pie :",data)
+
+        // Create the pie chart
+        var ctx = $el[0].getContext('2d');
+        var count = countUnique(window[attribute_name])
+        console.log("count of unique is :",count)
+        var chart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: Object.keys(count),
+            datasets: [{
+              label: attribute_name,
+              data: Object.values(count),
+              backgroundColor: [
+                '#ff6384',
+                '#36a2eb',
+                '#ffce56',
+                '#d92136'
+              ]
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              position: 'bottom'
+            },
+            title: {
+              display: true,
+              text: attribute_name
+            },
+            animation: {
+              animateScale: true,
+              animateRotate: true
+            }
+          }
+        });
+        $el.data('chart', chart);
       }
     });
-    $el.data('chart', chart);
-  }
-});
-function countUnique(arr) {
-  var obj = {};
-  for (var i = 0; i < arr.length; i++) {
-    var key = arr[i];
-    obj[key] = obj[key] ? obj[key] + 1 : 1;
-  }
-  return obj;
-}
-
-
-
-
+    function countUnique(arr) {
+      var obj = {};
+      for (var i = 0; i < arr.length; i++) {
+        var key = arr[i];
+        obj[key] = obj[key] ? obj[key] + 1 : 1;
+      }
+      return obj;
+    }
     </script>
 
-
+    <script src="{% static 'js/change_chart.js' %}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
