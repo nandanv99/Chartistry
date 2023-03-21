@@ -12,6 +12,21 @@ function bar(ty) {
     });
 }
 
+function color(ty) {
+  console.log("color changed ")
+  $('.drop-item ').each(function() {
+    var chart = $(this).data('chart');
+    if (chart) {
+      chart.config.type = ty;
+      chart.data.datasets.forEach(function(dataset) {
+        dataset.backgroundColor = ty; // Change the background color of each dataset to green
+      });
+      chart.update();
+    }
+  });
+}
+
+
 function showAlert() {
     var alertElement = document.getElementById("myAlert");
     alertElement.style.display = "block";

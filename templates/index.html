@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/new_main.css' %}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -14,12 +15,19 @@
     <link rel="icon" type="image/png" href="https://h5p.org/sites/default/files/styles/medium-logo/public/logos/chart-icon-color.png?itok=kpLTYHHJ" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>
-  
+  <style>
+    :root{
+      --color-bg: linear-gradient(to top,#010329,#000005);
+    }
+    body{
+      background-image:var(--color-bg);
+    }
+  </style>
   <body>
     <div class="site-wrap">
       <nav class="site-nav">
         <div class="name">
-          Chartify
+          <a href="/">Chartify</a>
 
           <svg width="24" height="24" viewBox="0 0 24 24">
             <path
@@ -44,26 +52,15 @@
           <li class="attribute"><a class="add-pie-chart" style="text-decoration:none;">{{item}}</a></li>
           {% endfor %}
         </ul>
-
-
-        <!-- <div class="note">
-          <h3>Your Monthly Report</h3>
-          <p>
-            Get the info about all your deals, pros, cons. And build your
-            roadmap.
-          </p>
-        </div> -->
       </nav>
 
-      <main>
+      <main style="background-image:linear-gradient(to top,#010329,#000005);">
         <header>
           <div class="breadcrumbs">
-            <!-- <a href="#0/">Home</a> -->
-            <h4>Visual will be here</h4>
-            
+            <h2 class="text-white text-center">Visual will be here</h2>
           </div>
 
-          <nav class="nav-tabs" id="nav-tabs">
+          <nav class="nav-tabs text-white" id="nav-tabs" style="cursor:pointer;">
             <a onclick="bar('line')" class="active">
               Line 
               <span><i class=" fas fa-solid fa-chart-line"></i></span>
@@ -84,19 +81,40 @@
                 Scatter
                 <span><i class="fa-solid fa-arrows-to-dot"></i></span>
             </a>
-            <a onclick="bar('radar')">
+            <a onclick="bar('radar');hideAxes()">
                 Radar
                 <span><i class="fa-solid fa-satellite-dish"></i></span>
             </a>
             <!-- <a href="#0"> Search Library polarArea</a> -->
             
           </nav>
-        </header>
-
-        <div class=" " style="height:90vh;">
+          <div class=" " style="height:90vh;" >
             <div id="dropzone" class="">
+              <!-- <h1 id="choose_att">Choose attribute from left pallet </h1> -->
+              <div class=" choose_att card bg-transparent text-center justify-content-center m-3">
+                <!-- <h2 >Choose attribute from left pallet</h2>
+                <hr >
+                <small>Chartify</small> -->
+                <section class="text-gray-600 body-font">
+                  <div class="container px-5 py-10 mx-auto">
+                    <div class="xl:w-1/2 lg:w-3/4 w-full mx-auto text-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-block w-8 h-8 text-gray-400 mb-8" viewBox="0 0 975.036 975.036">
+                        <path d="M925.036 57.197h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.399 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l36 76c11.6 24.399 40.3 35.1 65.1 24.399 66.2-28.6 122.101-64.8 167.7-108.8 55.601-53.7 93.7-114.3 114.3-181.9 20.601-67.6 30.9-159.8 30.9-276.8v-239c0-27.599-22.401-50-50-50zM106.036 913.497c65.4-28.5 121-64.699 166.9-108.6 56.1-53.7 94.4-114.1 115-181.2 20.6-67.1 30.899-159.6 30.899-277.5v-239c0-27.6-22.399-50-50-50h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.4 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l35.9 75.8c11.601 24.399 40.501 35.2 65.301 24.399z"></path>
+                      </svg>
+                      <p class="leading-relaxed text-lg">Chartify is a software application aimed at enhancing the visualization and statistical analysis capabilities of Excel. With a user-friendly interface, Chartify provides various functions that enable the creation of engaging and informative charts, graphs, and visualizations. In addition to the visual aspects, Chartify also includes built-in statistical functions that can help users to quickly and easily analyze and interpret data. By combining the best of both worlds, Chartify offers an all-in-one solution for data visualization and analysis, making it an indispensable tool for anyone who works with data on a regular basis.</p>
+                      <span class="inline-block h-1 w-10 rounded bg-indigo-500 mt-8 mb-6"></span>
+                      <h2 class="text-gray-500 font-medium title-font tracking-wider text-sm"><u> Chartify</u></h2>
+                      <p class="text-gray-500">Dev. Nandan </p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+              
             </div>
         </div>
+        </header>
+
+        
       </main>
     </div>
 
@@ -153,12 +171,37 @@
         {% endfor %}
     </script>
     <script>
+      function hideAxes() {
+        chart.label=false
+        chart.update();
+      };
+      
+      
+    </script>
+    <script>
+      function color_chart(ty) {
+        console.log("color changed ")
+        $('.drop-item ').each(function() {
+          var chart = $(this).data('chart');
+          if (chart) {
+            chart.data.datasets.forEach(function(dataset) {
+              dataset.borderColor = ty; // Change the background color of each dataset to green
+            });
+            chart.update();
+          }
+        });
+      };
+    </script>
+    <script>
         $('.add-chart').click('click', function() {
           // Remove any previously added charts
           $('.drop-item').remove();
-  
+          $('.choose_att').remove();
           var attribute_name = $(this).text().trim(); // Replace with desired attribute name
-          var $el = $('<canvas id="myChart" class="drop-item text-center "></canvas><hr class=" drop-item p-1 m-1"/><div class="dropdown drop-item"><button class="btn bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">X-axis</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">{% for item in params.head %}<a class="dropdown-item" onclick="setXAxisLabels({{item}}); return false;" >{{item}}</a>{% endfor %}</div></div>').attr('data-attribute', attribute_name);
+          var x_axis='<div class="row"><div class="col-1"><div class="dropup drop-item"><button class="btn text-white bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">X-axis</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">{% for item in params.head %}<a class="dropdown-item" onclick="setXAxisLabels({{item}}); return false;" >{{item}}</a>{% endfor %}</div></div></div>'
+          var color_bootstrap='<div class="col-1"></div>'
+          var color_pallet='<div class="col-1"><div class="dropup drop-item"><button class="btn text-white bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Color</button><div class="dropdown-menu m-0 p-0" aria-labelledby="dropdownMenuButton1">{% for item in params.colors %}<a class="dropdown-item p-0 m-0" onclick="color_chart('+"'"+'{{item}}'+"'"+');" style="background:{{item}}" ><span class="color-circle" style="width: 2px;height: 3px ;border-radius: 50%;display: inline-block;"></span></a>{% endfor %}</div></div></div>'
+          var $el = $('<canvas id="myChart" class="drop-item text-center "></canvas><hr class=" drop-item p-1 m-1"/>'+x_axis+color_pallet+color_bootstrap).attr('data-attribute', attribute_name);
           console.log(window[attribute_name]);
           $('#dropzone').append($el);
           var ctx = $el[0].getContext('2d');
@@ -171,7 +214,7 @@
                 data: window[attribute_name],
                 borderWidth: 1,
                 borderColor: '#d92136',
-                yAxisID: attribute_name // Use attribute name as ID for y-axis scale
+                yAxisID: attribute_name, // Use attribute name as ID for y-axis scale
               }]
             },
             options: {
@@ -187,6 +230,10 @@
                     grid:{
                         drawOnChartArea: false
                       },
+                      title: {
+                        display: true,
+                        text: 'Test'
+                      }
                 },
               }
             }
@@ -199,6 +246,7 @@
             var attribute_name = $(this).text().trim(); // Replace with desired attribute name
             var $existingChart = $('.drop-item canvas[data-attribute="' + attribute_name + '"]');
             $('.drop-item').remove();
+            $('.choose_att').remove();
             if ($existingChart.length) {
               var chart = $existingChart.data('chart');
               var newData = [];
@@ -208,8 +256,7 @@
               chart.data.datasets[0].data = newData;
               chart.update();
             } else {
-              var $el = $('<canvas class="drop-item" style="max-height:85vh;"></canvas>').attr('data-attribute', attribute_name);
-              $el.append($('<button type="button" class="btn btn-default btn-xs remove"><span class="fa-solid fa-trash text-white"></span></button>').click(function () { $(this).parent().detach(); }));
+              var $el = $('<canvas class="drop-item text-center " style="max-height:70vh;"></canvas><hr class=" drop-item p-1 m-1"/><div class="dropup drop-item"><button class="btn text-white bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">X-axis</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">{% for item in params.head %}<a class="dropdown-item" onclick="setXAxisLabels({{item}}); return false;" >{{item}}</a>{% endfor %}</div></div>').attr('data-attribute', attribute_name);
               $('#dropzone').append($el);
       
               // Generate random data for the chart

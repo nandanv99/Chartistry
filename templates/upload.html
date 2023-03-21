@@ -23,7 +23,7 @@
 
 body {
   font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(0.25turn, #030917, #313f64, #030917);
+  background: linear-gradient(0.25turn, #010329, #000005);
 }
 
 .wrapper {
@@ -97,16 +97,11 @@ h1 {
       <div class="border-container">
         <form action="/upload_csv" method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <!-- <label id="file-browser" for="files">browse</label>  -->
             <p>Drag and drop files here, or 
               <label id="file-browser" for="files">browse</label> 
               your computer.</p>
               <label class="m-2" style="font-style:italic;" for="files"></label>
                 <input class="text-center" id="files" type="file" name="mycsv" style="display:none;">
-                
-                
-                
-                <!-- <label for="files">Click me to upload image</label> -->
 
             
             <div class="icons fa-4x">

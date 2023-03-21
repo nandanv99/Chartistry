@@ -16,6 +16,7 @@ def is_list(value):
 
 def main(request):
     return render(request,"upload.html")
+    # return render(request,"new_template.html")
 
 
 def upload_csv(request):
@@ -68,6 +69,7 @@ def upload_csv(request):
         params["columns"]=len(cols)
         params["row"]=len(data)
         params["recursive"]=recursive_cols
+        params['colors']=["#14A44D","red","#E4A11B","#3B71CA","#FBFBFB","#DC4C64","#54B4D3"]
         # print("nested dic ", params)
         print(params["head"])
 
