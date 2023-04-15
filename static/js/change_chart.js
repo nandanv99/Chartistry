@@ -28,12 +28,20 @@ function color(ty) {
 
 
 function showAlert() {
-    var alertElement = document.getElementById("myAlert");
-    alertElement.style.display = "block";
+  var alertElement = document.getElementById("myAlert");
+  alertElement.classList.add("animate__animated", "animate__fadeInRight");
+  console.log("animattion added")
+  alertElement.style.display = "block";
+  setTimeout(function() {
+    alertElement.classList.remove("animate__fadeInRight");
+    alertElement.classList.add("animate__fadeOutRight");
     setTimeout(function() {
       alertElement.style.display = "none";
-    }, 5000);
-  }
+      alertElement.classList.remove("animate__fadeOutRight");
+    }, 1000);
+  }, 5000);
+}
+
 
 // table creation
 $(document).ready(function() {

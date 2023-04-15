@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.3.0/luxon.min.js" integrity="sha512-KKbQg5o92MwtJKR9sfm/HkREzfyzNMiKPIQ7i7SZOxwEdiNCm4Svayn2DBq7MKEdrqPJUOSIpy1v6PpFlCQ0YA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-luxon/0.2.1/chartjs-adapter-luxon.min.js" integrity="sha512-7OAqY8fMTYheWYbBkIFSrme9s5PZSyprCwaE9hJfGkDqpveJytJOMjk8gRNDLHzEijRSzUhAvNcNZrDQr7JyWQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="{% static 'css/new_main.css' %}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -27,14 +29,21 @@
     <div class="site-wrap">
       <nav class="site-nav">
         <div class="name">
-          <a href="/">Chartify</a>
+          <!-- <a href="/">Chartistry</a> -->
+          <a href="/"><img src="{% static 'images/chartistry.png' %}" class="text-white m-0" alt=""></a>
 
-          <svg width="24" height="24" viewBox="0 0 24 24">
+          <svg width="24" height="24" viewBox="0 0 24 24" onclick="showAlert()">
             <path
               d="M11.5,22C11.64,22 11.77,22 11.9,21.96C12.55,21.82 13.09,21.38 13.34,20.78C13.44,20.54 13.5,20.27 13.5,20H9.5A2,2 0 0,0 11.5,22M18,10.5C18,7.43 15.86,4.86 13,4.18V3.5A1.5,1.5 0 0,0 11.5,2A1.5,1.5 0 0,0 10,3.5V4.18C7.13,4.86 5,7.43 5,10.5V16L3,18V19H20V18L18,16M19.97,10H21.97C21.82,6.79 20.24,3.97 17.85,2.15L16.42,3.58C18.46,5 19.82,7.35 19.97,10M6.58,3.58L5.15,2.15C2.76,3.97 1.18,6.79 1,10H3C3.18,7.35 4.54,5 6.58,3.58Z"
             ></path>
           </svg>
         </div>
+        <div class="text-center mb-3 mt-0">
+          <div class="card  ml-4 border border-light mr-5 text-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+            <h1 class="text-center mr-4 p-3  text-black" style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:large;" ><b> Attributes / Columns</b></h1>
+          </div>
+        </div>
+       
 
         <ul>
           <!-- <li class="active"> 
@@ -55,10 +64,13 @@
       </nav>
 
       <main style="background-image:linear-gradient(to top,#010329,#000005);">
-        <header>
-          <div class="breadcrumbs">
-            <h2 class="text-white text-center">Visual will be here</h2>
-          </div>
+        <div class=" border border-danger alert alert-dark alert-dismissible fade-right show position-fixed top-0 end-0" role="alert" id="myAlert" style="z-index: 9999;border-radius:10px; margin:10px;display:none;">
+          {{ params.message_text }}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <header class="p-0 px-5">
 
           <nav class="nav-tabs text-white" id="nav-tabs" style="cursor:pointer;">
             <a onclick="bar('line')" class="active">
@@ -85,25 +97,31 @@
                 Radar
                 <span><i class="fa-solid fa-satellite-dish"></i></span>
             </a>
-            <!-- <a href="#0"> Search Library polarArea</a> -->
+            {% if params.stock %}
+            <a class="add-stock-chart">
+              Stock
+              <span><i class="fa-solid fa-satellite-dish"></i></span>
+            </a>
+            {% endif %}
+            <!-- <a class="add-stock-chart">
+              Stock
+              <span><i class="fa-solid fa-satellite-dish"></i></span>
+            </a> -->
+            <!-- <a href="#0"> Search Library polarArea</a>add-stock-chart -->
             
           </nav>
           <div class=" " style="height:90vh;" >
             <div id="dropzone" class="">
-              <!-- <h1 id="choose_att">Choose attribute from left pallet </h1> -->
               <div class=" choose_att card bg-transparent text-center justify-content-center m-3">
-                <!-- <h2 >Choose attribute from left pallet</h2>
-                <hr >
-                <small>Chartify</small> -->
                 <section class="text-gray-600 body-font">
                   <div class="container px-5 py-10 mx-auto">
                     <div class="xl:w-1/2 lg:w-3/4 w-full mx-auto text-center">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="inline-block w-8 h-8 text-gray-400 mb-8" viewBox="0 0 975.036 975.036">
                         <path d="M925.036 57.197h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.399 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l36 76c11.6 24.399 40.3 35.1 65.1 24.399 66.2-28.6 122.101-64.8 167.7-108.8 55.601-53.7 93.7-114.3 114.3-181.9 20.601-67.6 30.9-159.8 30.9-276.8v-239c0-27.599-22.401-50-50-50zM106.036 913.497c65.4-28.5 121-64.699 166.9-108.6 56.1-53.7 94.4-114.1 115-181.2 20.6-67.1 30.899-159.6 30.899-277.5v-239c0-27.6-22.399-50-50-50h-304c-27.6 0-50 22.4-50 50v304c0 27.601 22.4 50 50 50h145.5c-1.9 79.601-20.4 143.3-55.4 191.2-27.6 37.8-69.4 69.1-125.3 93.8-25.7 11.3-36.8 41.7-24.8 67.101l35.9 75.8c11.601 24.399 40.501 35.2 65.301 24.399z"></path>
                       </svg>
-                      <p class="leading-relaxed text-lg">Chartify is a software application aimed at enhancing the visualization and statistical analysis capabilities of Excel. With a user-friendly interface, Chartify provides various functions that enable the creation of engaging and informative charts, graphs, and visualizations. In addition to the visual aspects, Chartify also includes built-in statistical functions that can help users to quickly and easily analyze and interpret data. By combining the best of both worlds, Chartify offers an all-in-one solution for data visualization and analysis, making it an indispensable tool for anyone who works with data on a regular basis.</p>
+                      <p class="leading-relaxed text-lg">Chartistry is a software application aimed at enhancing the visualization and statistical analysis capabilities of Excel. With a user-friendly interface, Chartistry provides various functions that enable the creation of engaging and informative charts, graphs, and visualizations. In addition to the visual aspects, Chartistry also includes built-in statistical functions that can help users to quickly and easily analyze and interpret data. By combining the best of both worlds, Chartistry offers an all-in-one solution for data visualization and analysis, making it an indispensable tool for anyone who works with data on a regular basis.</p>
                       <span class="inline-block h-1 w-10 rounded bg-indigo-500 mt-8 mb-6"></span>
-                      <h2 class="text-gray-500 font-medium title-font tracking-wider text-sm"><u> Chartify</u></h2>
+                      <h2 class="text-gray-500 font-medium title-font tracking-wider text-sm"><u> Chartistry</u></h2>
                       <p class="text-gray-500">Dev. Nandan </p>
                     </div>
                   </div>
@@ -140,6 +158,11 @@
           tab.classList.add("active");
         });
       });
+      {% if params.message %}
+      window.onload = function() {
+        showAlert();
+      };
+      {% endif %}
     </script>
     <script>
         // Get all elements with class "attribute"
@@ -169,6 +192,8 @@
           {% endif %}
           console.log("{{key}} :",{{key}}); 
         {% endfor %}
+        var month=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+        var week=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     </script>
     <script>
       function hideAxes() {
@@ -191,6 +216,45 @@
           }
         });
       };
+      function background_chart(ty) {
+        console.log("color changed ")
+        $('.drop-item ').each(function() {
+          var chart = $(this).data('chart');
+          if (chart) {
+            chart.data.datasets.forEach(function(dataset) {
+              dataset.backgroundColor = ty; // Change the background color of each dataset to green
+            });
+            chart.update();
+          }
+        });
+      };
+      function mean(arr) {
+        arr = arr.map(num => Number(num));
+        const sum = arr.reduce((acc, val) => acc + val, 0);
+        const mean = sum / arr.length;
+        return mean.toFixed(2)
+      }
+      function median(arr){
+        arr = arr.map(num => Number(num));
+        arr.sort((a, b) => a - b);
+        const middleIndex = Math.floor(arr.length / 2);
+        const median = arr.length % 2 === 0 ? (arr[middleIndex - 1] + arr[middleIndex]) / 2 : arr[middleIndex];
+        return median
+      }
+      function mode(arr){
+        arr = arr.map(num => Number(num));
+        const countMap = {};
+        let maxCount = 0;
+        let mode = null;
+        for (const num of arr) {
+          countMap[num] = (countMap[num] || 0) + 1;
+          if (countMap[num] > maxCount) {
+            maxCount = countMap[num];
+            mode = num;
+          }
+        }
+        return mode
+      }
     </script>
     <script>
         $('.add-chart').click('click', function() {
@@ -198,10 +262,30 @@
           $('.drop-item').remove();
           $('.choose_att').remove();
           var attribute_name = $(this).text().trim(); // Replace with desired attribute name
-          var x_axis='<div class="row"><div class="col-1"><div class="dropup drop-item"><button class="btn text-white bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">X-axis</button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">{% for item in params.head %}<a class="dropdown-item" onclick="setXAxisLabels({{item}}); return false;" >{{item}}</a>{% endfor %}</div></div></div>'
-          var color_bootstrap='<div class="col-1"></div>'
-          var color_pallet='<div class="col-1"><div class="dropup drop-item"><button class="btn text-white bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Color</button><div class="dropdown-menu m-0 p-0" aria-labelledby="dropdownMenuButton1">{% for item in params.colors %}<a class="dropdown-item p-0 m-0" onclick="color_chart('+"'"+'{{item}}'+"'"+');" style="background:{{item}}" ><span class="color-circle" style="width: 2px;height: 3px ;border-radius: 50%;display: inline-block;"></span></a>{% endfor %}</div></div></div>'
-          var $el = $('<canvas id="myChart" class="drop-item text-center "></canvas><hr class=" drop-item p-1 m-1"/>'+x_axis+color_pallet+color_bootstrap).attr('data-attribute', attribute_name);
+          var mean_val=mean(window[attribute_name])
+          var median_val=median(window[attribute_name])
+          var mode_val=mode(window[attribute_name])
+          
+          var row_end='</div></div>'
+          var x_axis='<div class="col-12 col-sm-6 col-lg-1 p-0 m-0"><div class="dropup drop-item"><button class="btn text-white bg-transparent " type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bar-chart"></i><small> x-axis</small></button><div class="dropdown-menu" aria-labelledby="dropdownMenuButton">{% for item in params.head %}<a class="dropdown-item" onclick="setXAxisLabels({{item}}); return false;" >{{item}}</a>{% endfor %}<div class="dropdown-divider"></div><a class="dropdown-item" onclick="setXAxisLabels('+'month'+'); return false;" >Month</a><a class="dropdown-item" onclick="setXAxisLabels('+'week'+'); return false;" >Week</a></div></div></div>'
+          var color_pallet='<div class="col-12 col-sm-6 col-lg-1 p-0 m-0"><div class="dropup drop-item" style="display:inline" ><button class="btn text-white bg-transparent " type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-paintbrush"></i><small> color</small></button><div class="dropdown-menu m-0 p-0" style="cursor:pointer" aria-labelledby="dropdownMenuButton1">{% for item in params.colors %}<a class="dropdown-item p-0 m-0" onclick="color_chart('+"'"+'{{item}}'+"'"+');" style="background:{{item}}" ><span class="color-circle" style="width: 2px;height: 3px ;border-radius: 50%;display: inline-block;"></span></a>{% endfor %}</div></div></div>'
+          var backg_pallet='<div class="col-12 col-sm-6 col-lg-2 p-0 m-0 "><div class="dropup drop-item" style="display:inline"><button class="btn text-white bg-transparent " type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa-solid fa-layer-group"></i><small> background</small></button><div class="dropdown-menu m-0 p-0" style="cursor:pointer" aria-labelledby="dropdownMenuButton2">{% for item in params.colors %}<a class="dropdown-item p-0 m-0" onclick="background_chart('+"'"+'{{item}}'+"'"+');" style="background:{{item}}" ><span class="color-circle" style="width: 2px;height: 3px ;border-radius: 50%;display: inline-block;"></span></a>{% endfor %}</div></div></div>'
+          var table=`<div class="offset-5 col-12 col-sm-6 col-lg-3 drop-item"><div class="table-responsive"><table class="table table-hover border border-light px-1">
+              <tr class="text-white">
+                <td>Mean</td>
+                <td>`+mean_val+`</td>
+              </tr>
+              <tr class="text-white">
+                <td>Median</td>
+                <td>`+median_val+`</td>
+              </tr>
+              <tr class="text-white">
+                <td>Mode</td>
+                <td>`+mode_val+`</td>
+              </tr>
+          </table></div></div>`
+          var row=`<div class="container"><div class="row">`+x_axis+color_pallet+backg_pallet+table+row_end
+          var $el = $('<canvas id="myChart" class="drop-item text-center "></canvas><hr class=" drop-item p-1 m-1"/>'+row).attr('data-attribute', attribute_name);
           console.log(window[attribute_name]);
           $('#dropzone').append($el);
           var ctx = $el[0].getContext('2d');
@@ -216,6 +300,9 @@
                 borderColor: '#d92136',
                 yAxisID: attribute_name, // Use attribute name as ID for y-axis scale
               }]
+            },
+            axisY:{
+              title: "Price"
             },
             options: {
               scales: {
@@ -239,6 +326,64 @@
             }
           });
           $el.data('chart', chart);
+        });
+      </script>
+      <script>
+        $('.add-stock-chart').click('click', function() {
+            $('.drop-item').remove();
+            $('.choose_att').remove();
+            var $el = $('<canvas id="myChart" class="drop-item text-center "></canvas><')
+            $('#dropzone').append($el);
+            // setup 
+            const data = {
+              labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+              datasets: [{
+                label: 'Weekly Sales',
+                data: [18, 12, 6, 9, 12, 3, 9],
+                backgroundColor: [
+                  'rgba(255, 26, 104, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)',
+                  'rgba(0, 0, 0, 0.2)'
+                ],
+                borderColor: [
+                  'rgba(255, 26, 104, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)',
+                  'rgba(0, 0, 0, 1)'
+                ],
+                borderWidth: 1
+              }]
+            };
+        
+            // config 
+            const config = {
+              type: 'bar',
+              data,
+              options: {
+                scales: {
+                  y: {
+                    beginAtZero: true
+                  }
+                }
+              }
+            };
+        
+            // render init block
+            const myChart = new Chart(
+              document.getElementById('myChart'),
+              config
+            );
+        
+            // Instantly assign Chart.js version
+            
+
         });
       </script>
       <script>
@@ -315,6 +460,7 @@
       </script>
 
     <script src="{% static 'js/change_chart.js' %}"></script>
+    <script src="{% static 'js/chart-js-financial.js' %}"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

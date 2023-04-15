@@ -2,6 +2,7 @@
 from django.shortcuts import render,redirect
 import pandas as pd
 from io import StringIO
+from django.contrib.messages import constants as messages
 import re
 # Create your views here.
 from django.template.defaultfilters import register
@@ -26,9 +27,20 @@ def upload_csv(request):
         file=request.FILES.get('mycsv')
         # file1=file
         file1=StringIO(file.read().decode('utf-8'))
-        data=pd.read_csv(file1,sep='[:;,|_]',engine='python')
+        data=pd.read_csv(file1,sep='[:;,|]',engine='python')
         date_cols = [col for col in data.columns if re.match(r'.*(date|time|timestamp).*', col, re.IGNORECASE)]
         phone_cols = [col for col in data.columns if re.match(r'.*(phone|tel|mobile).*', col, re.IGNORECASE)]
+        OHLV = [col.lower() for col in data.columns if re.match(r'.*(open|high|low|close).*', col, re.IGNORECASE)]
+        messgage=False
+        message_text="File analysed"
+        if len(OHLV)==0:
+            OHLV=False
+            messgage=True
+        else:
+            message_text="Detected you have provided Financial file."
+            messgage=True
+            print("yes financial ")
+        print(OHLV)
         cols_to_drop = date_cols + phone_cols
         data = data.drop(cols_to_drop, axis=1)
 
@@ -48,11 +60,9 @@ def upload_csv(request):
         print("recursive cols: ",recursive_cols)
         new_col = []
         for item in cols:
-            # replace '-' with '_'
             item = item.replace('-', '_')
             item = item.replace("Date",'date')
             item = item.replace(' ', '')
-            # replace '&' with 'and'
             item = item.replace('&', 'and')
             new_col.append(item)
 
@@ -69,7 +79,10 @@ def upload_csv(request):
         params["columns"]=len(cols)
         params["row"]=len(data)
         params["recursive"]=recursive_cols
-        params['colors']=["#14A44D","red","#E4A11B","#3B71CA","#FBFBFB","#DC4C64","#54B4D3"]
+        params['colors']=["#14A44D","red","#E4A11B","#3B71CA","#FBFBFB","#DC4C64","#9966FF","#4BC0C0"]
+        params['stock']=OHLV
+        params['message_text']=message_text
+        params['message']=messgage
         # print("nested dic ", params)
         print(params["head"])
 
