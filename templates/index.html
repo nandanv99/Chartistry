@@ -24,6 +24,13 @@
     body{
       background-image:var(--color-bg);
     }
+    div.dropdown-multicol{
+      width: 30em;
+    }
+    div.dropdown-row>a.dropdown-item{
+      display:inline-block;
+      width: 32%;
+    }
   </style>
   <body>
     <div class="site-wrap">
@@ -61,6 +68,9 @@
           <li class="attribute"><a class="add-pie-chart" style="text-decoration:none;">{{item}}</a></li>
           {% endfor %}
         </ul>
+        <div class="card   ml-4 mb-4 border border-light mr-5 text-center" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); background: rgb(34,193,195);background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(253,187,45,1) 100%);">
+          <a href="/"><button class=""><h1 class="text-center mr-4 p-3  text-white" style="font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;font-size:large;" ><b>Analyse new file</b></h1></button></a>
+        </div>
       </nav>
 
       <main style="background-image:linear-gradient(to top,#010329,#000005);">
@@ -97,6 +107,62 @@
                 Radar
                 <span><i class="fa-solid fa-satellite-dish"></i></span>
             </a>
+            <a  class="dropdown-toggle" type="button" data-toggle="modal" data-target="#exampleModal">
+              Apply AUTO_ML
+              <span><i class="fa-solid fa-satellite-dish"></i></span>
+            </a>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-black" id="exampleModalLabel">Apply ML</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body text-black">
+                    <div class="container">
+                      <div class="row">
+                        <div class="col-md-4">
+                          <h1 class="m-2">Model</h1>
+                          <form class="form-group">
+                            {% csrf_token %}
+                            {% for item in params.mlmodel %}
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="{{item}}" id="{{item}}" value="{{item}}">
+                                <label class="form-check-label" for="option1">{{item}}</label>
+                              </div>
+                            {% endfor %}
+                            </div>
+                            <div class="col-md-4">
+                              <h1 class="m-2">Dependent</h1>
+                              {% for item in params.head %}
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="ml_d_{{item}}" id="ml_d_{{item}}" value="{{item}}" >
+                                <label class="form-check-label" for="option4">{{item}}</label>
+                              </div>
+                              {% endfor %}
+                            </div>
+                            <div class="col-md-4">
+                              <h1 class="m-2">Independent</h1>
+                              {% for item in params.head %}
+                              <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="ml_nd_{{item}}" id="ml_nd_{{item}}" value="{{item}}" >
+                                <label class="form-check-label" for="option7">{{item}}</label>
+                              </div>
+                              {% endfor %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="bg-danger btn btn-danger text-white" data-dismiss="modal">Close</button>
+                        <button type="submit" class="bg-success btn btn-success text-white">Apply</button>
+                      </div>
+                </form>
+                </div>
+              </div>
+            </div>
             {% if params.stock %}
             <a class="add-stock-chart">
               Stock
@@ -458,6 +524,73 @@
             return obj;
           }
       </script>
+      <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+          console.log("form submited")
+            event.preventDefault();
+
+            let mlmodel = [];
+            {% for i in params.mlmodel %}
+            let {{i}} = document.querySelector('#{{i}}').value;
+            if ({{i}}.checked) {
+              mlmodel.push({{i}}.value);
+            }
+            {% endfor %}
+
+           
+
+            // Create an array to store the selected checkboxes
+            let Dependent = [];
+
+            {% for item in params.head %}
+            let ml_d_{{item}} = document.querySelector('#ml_d_{{item}}');
+            if (ml_d_{{item}}.checked) {
+              Dependent.push(ml_d_{{item}}.value);
+            }
+            {% endfor %}
+
+            let INDependent = [];
+            {% for item in params.head %}
+            let ml_nd_{{item}} = document.querySelector('#ml_nd_{{item}}');
+            if (ml_nd_{{item}}.checked) {
+              INDependent.push(ml_d_{{item}}.value);
+            }
+            {% endfor %}
+            console.log(Dependent,INDependent);
+                
+            
+            // Send AJAX request to the server with the user's query
+            fetch('/process_form', {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                },
+                body: JSON.stringify({
+                    'Dependent':Dependent,
+                    'INDependent':INDependent,
+                    'mlmodel':mlmodel
+                }),
+            })
+            .then(response => response.json())
+            //.then(data => {
+                // Get the solution from the server's response
+              //  let solution = data.message;
+        
+                // Create new HTML content with the user's query and the solution
+                //let newContent = `
+                  //  <div class="card p-3 m-2 mt-3" style="border: 1px solid rgba(0, 0, 0, 0.125);box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);">
+                    //    <small><b>Query: </b>${userInput}</small>
+                      //  <small><b>Solution : </b>${solution}</small>
+                    //</div>
+                //`;
+        
+                // Append the new HTML content to the existing element
+                //document.querySelector('#right_side').insertAdjacentHTML('beforeend', newContent);
+            //})
+        });
+        
+        </script>
 
     <script src="{% static 'js/change_chart.js' %}"></script>
     <script src="{% static 'js/chart-js-financial.js' %}"></script>
@@ -466,5 +599,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    
   </body>
 </html>

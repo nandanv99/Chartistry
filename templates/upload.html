@@ -86,13 +86,175 @@ h1 {
 .icons {
   color: #95afc0;
   opacity: 0.55;
-}</style>
+}
+</style>
+<style>
+  .example {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      height: 5rem;
+      width: 5rem;
+      transform: translateX(-50%) translateY(-50%);
+ }
+
+
+  .container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 5rem;
+      width: 5rem;
+ }
+  .container:nth-of-type(1) {
+      transform: rotate(0);
+ }
+  .container:nth-of-type(2) {
+      transform: rotate(180deg);
+ }
+  .block {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 5rem;
+      width: 5rem;
+      background: linear-gradient(71deg, #0d1212, #3da077, #0d1212);
+      animation: move3 4.8s steps(1) infinite;
+ }
+  .block:nth-of-type(1) {
+      animation-delay: 0;
+ }
+  .block:nth-of-type(2) {
+      animation-delay: 0.24s;
+ }
+  .block:nth-of-type(3) {
+      animation-delay: 0.48s;
+ }
+  .block:nth-of-type(4) {
+      animation-delay: 0.72s;
+ }
+  .block > .item {
+      float: left;
+      height: 2.5rem;
+      width: 2.5rem;
+      background: linear-gradient(71deg, #0d1212, #3da077, #0d1212);
+ }
+  .block > .item:nth-of-type(1), .block > .item:nth-of-type(2) {
+      animation: move1 1.2s linear infinite;
+ }
+  .block > .item:nth-of-type(3), .block > .item:nth-of-type(4) {
+      animation: move2 1.2s linear infinite;
+ }
+  .block > .item:nth-of-type(1) {
+      animation-delay: 0;
+ }
+  .block > .item:nth-of-type(2) {
+      animation-delay: 0.12s;
+ }
+  .block > .item:nth-of-type(3) {
+      animation-delay: 0.24s;
+ }
+  .block > .item:nth-of-type(4) {
+      animation-delay: 0.36s;
+ }
+  @keyframes move1 {
+      0% {
+          transform: rotate(0deg);
+          transform-origin: 50% 50%;
+     }
+      7% {
+          transform: rotate(180deg);
+          transform-origin: 100% 0%;
+     }
+      15% {
+          transform: rotate(270deg);
+          transform-origin: 150% -50%;
+     }
+      20% {
+          transform: rotate(270deg);
+          transform-origin: 150% -50%;
+     }
+      70% {
+          transform: rotate(270deg);
+          transform-origin: 150% -50%;
+          opacity: 0;
+     }
+      100% {
+          transform: rotate(270deg);
+          transform-origin: 150% -50%;
+          opacity: 0;
+     }
+ }
+  @keyframes move2 {
+      0% {
+          transform: rotate(0deg);
+          transform-origin: 50% 50%;
+     }
+      7% {
+          transform: rotate(-180deg);
+          transform-origin: 100% 100%;
+     }
+      15% {
+          transform: rotate(-270deg);
+          transform-origin: 150% 150%;
+     }
+      20% {
+          transform: rotate(-270deg);
+          transform-origin: 150% 150%;
+     }
+      70% {
+          transform: rotate(-270deg);
+          transform-origin: 150% 150%;
+          opacity: 0;
+     }
+      100% {
+          transform: rotate(-270deg);
+          transform-origin: 150% 150%;
+          opacity: 0;
+     }
+ }
+  @keyframes move3 {
+      0% {
+          transform: rotate(0);
+     }
+      25% {
+          transform: rotate(90deg);
+     }
+      50% {
+          transform: rotate(180deg);
+     }
+      75% {
+          transform: rotate(270deg);
+     }
+      100% {
+          transform: rotate(360deg);
+     }
+ }
+ .loading .block {
+  animation-play-state: running;
+}
+.blur{
+  filter: blur(8px);
+-webkit-filter: blur(8px);
+}
+.container-title {
+  text-align: center;
+  padding: 0 !important;
+  margin-bottom: 20px;
+  font-size: 40px;
+  color: #fff;
+  font-weight: 600;
+  line-height: 60px;
+}
+  
+</style>
 
 
 <body >
+  <p class="container-title">Chartistry</p>
   <div class="wrapper">
-  <div class="container">
-    <h1>Upload a CSV</h1>
+  <div class="container-card ">
+    <h4 class="text-white">Upload a CSV</h4>
     <div class="upload-container">
       <div class="border-container">
         <form action="/upload_csv" method="post" enctype="multipart/form-data">
@@ -109,12 +271,31 @@ h1 {
                 <i class="fas fa-file-alt" data-fa-transform="shrink-2 up-4"></i>
                 <i class="fas fa-file-pdf" data-fa-transform="shrink-3 down-2 right-6 rotate-45"></i>
             </div>
-        <button class="btn btn-primary m-4" type="submit">submit</button>
+        <button class="btn btn-primary m-4" type="submit" onclick="toggleVisibility()">submit</button>
         </form>
         <!--<input type="file" id="file-upload">-->
         
       </div>
     </div>
+  </div>
+</div>
+
+<div class='example ' style="display:none">
+  <div class='container' >
+      <div class='block'>
+          <div class='item'></div>
+          <div class='item'></div>
+          <div class='item'></div>
+          <div class='item'></div>
+      </div>
+  </div>
+  <div class='container'>
+      <div class='block'>
+          <div class='item'></div>
+          <div class='item'></div>
+          <div class='item'></div>
+          <div class='item'></div>
+      </div>
   </div>
 </div>
 
@@ -133,6 +314,24 @@ h1 {
     $(this).prev('label').text(file);
   });
   
+</script>
+<script>
+  function toggleVisibility() {
+      // Get a reference to the .example element
+      var exampleElement = document.querySelector('.example');
+      var blurit= document.querySelector('.wrapper');
+
+
+      // Toggle the display property to show or hide the element
+      if (exampleElement.style.display === 'none') {
+          exampleElement.style.display = 'block'; // Change to 'block' to make it visible
+          blurit.classList.add('blur');
+      } else {
+          exampleElement.style.display = 'none';
+      }
+
+      // You can also add your loading animation logic here if needed
+  }
 </script>
 
 </html>

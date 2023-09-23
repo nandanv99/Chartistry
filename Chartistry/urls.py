@@ -15,9 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from . import views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('register', views.register),
+    path('signup', views.singup),
+    path('signin', views.signin),
+    path('logout',views.logout_view),
     path('', include('main.urls')),
     # re_path(r'^media/(?P<path>.*)$',serve,{'document_root':settings.MEDIA_ROOT}),
 ]
