@@ -11,3 +11,6 @@ Run the script:
 ```
 python manage.py runserver
 ```
+
+### Tutorial : https://youtu.be/j0-wBN5p0a8?feature=shared
+### Pitch : https://youtu.be/kaCpnoEzDtc
